@@ -104,7 +104,7 @@ class MemoryManager:
         system_prompt = """
         Analyze the following conversation to determine the mood of the user.
         The conversation is a list of messages between the user and the the assistant.
-        
+
         One of these moods: Joy, Stress, Tired, Excited, or A Bit Sad. Based on the detected mood, output ONLY the corresponding emoji's Unicode code point (and nothing else).
 
         Mapping:
@@ -143,7 +143,7 @@ class MemoryManager:
     async def summarize_conversation(self, conversation: str, mood: Mood) -> str:
         """Summarize the conversation"""
         system_prompt = f"""
-        Summarize the following conversation between the user and the assistant. 
+        Summarize the following conversation between the user and the assistant.
         Bear in mind, this converation is for the user! Keep it clear, do not be too verbose.
         """
 
