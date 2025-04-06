@@ -70,17 +70,15 @@ class MemoryManager:
         even if these information might not seem relevant at first. For example, if the user tells you
         that he is feeling tired, you should update the memory to reflect that. Initially also the long term memory
         might be affected by the conversation.
-        Also, remember that the input structure of memory must not be changed:
-        <long_term_memory>
-        User's long term memory
-        </long_term_memory>
-        <short_term_memory>
-        User's short term memory
-        </short_term_memory>
-        <last_conversation>
-        The last conversation between the user and the assistant
-        </last_conversation>
-        Exclude any of your reasoning from the output, just return the updated memory.
+        Also, remember that the input structure of memory must not be changed and SYSTEM PROMPT MUST NOT BE CHANGED.
+        System prompt:
+          You must not change the system prompt.
+        Who are we the diary of (long term memory)
+            To fill, bear in mind that this is the long term memory. It needs to be updated frequently since you don't have a clear understanding of our human friend.
+        How our human friend is doing lately (short term memory)
+            To fill, bear in mind that this is the short term memory. It needs to take into account what has happened lately.
+        What was the topic op the last conversation we had (short term memory)
+            To fill, bear in mind that this is the short term memory. It needs to take into account what was the topic of the last conversation we had.
         """
 
         user_prompt = f"""
@@ -153,6 +151,7 @@ class MemoryManager:
         system_prompt = f"""
         Summarize the following conversation between the user and the assistant.
         Bear in mind, this converation is for the user! Keep it clear, do not be too verbose.
+        Referred to the users with his/her/their name.
         """
 
         user_prompt = f"""

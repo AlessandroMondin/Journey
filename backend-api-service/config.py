@@ -58,8 +58,6 @@ Who are we the diary of (long term memory)
 How our human friend is doing lately (short term memory)
 
 What was the topic op the last conversation we had (short term memory)
-
-{{agent_id}} {{memory_id}}
 """
 
 
