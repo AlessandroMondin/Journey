@@ -1,9 +1,10 @@
 # Journey: A Digital Thought Companion
 
-Journey is a Digital AI Diary that help people to keep track of how they feel and how their thoughts are influence by the external world. Journey
-besides interactive (you will speak with your diary), also comes with an integrated calendar where users can track past conversations and also understand with the blink of an eye they feel.
+Journey is a Digital AI Diary that help people to keep track of how they feel and how their thoughts are influence by the external world. Besides this diary being interactive (you will talk to your diary), it also comes with an integrated calendar where users can track past conversations and also understand with the blink of an eye they felt.
 
-## About Journey
+<img width="1459" alt="calendar" src="https://github.com/user-attachments/assets/98303d30-804c-4e58-9147-c0ef3b0be04e" />
+
+## How to use Journey
 
 In order to run it you need to perform quite some steps:
 
