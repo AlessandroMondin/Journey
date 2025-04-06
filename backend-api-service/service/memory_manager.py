@@ -42,12 +42,11 @@ class MemoryManager:
             self.llm_sentiment_analysis_memory(last_conversation),
             self.llm_update_memory(agent_id, user_id, memory, last_conversation),
         )
+        summary = await self.summarize_conversation(last_conversation, mood)
 
         crud.update_user_memory_by_agent_id(self.db, agent_id, updated_memory)
 
-        crud.add_new_user_memory(
-            self.db, user_id, agent_id, text=updated_memory, mood=mood
-        )
+        crud.add_new_user_memory(self.db, user_id, agent_id, text=summary, mood=mood)
 
         return updated_memory
 
@@ -103,7 +102,10 @@ class MemoryManager:
     async def llm_sentiment_analysis_memory(self, memory: str) -> Mood | None:
         """Analyze the sentiment of a memory"""
         system_prompt = """
-        Analyze the following text to determine if it expresses one of these moods: Joy, Stress, Tired, Excited, or A Bit Sad. Based on the detected mood, output ONLY the corresponding emoji's Unicode code point (and nothing else).
+        Analyze the following conversation to determine the mood of the user.
+        The conversation is a list of messages between the user and the the assistant.
+        
+        One of these moods: Joy, Stress, Tired, Excited, or A Bit Sad. Based on the detected mood, output ONLY the corresponding emoji's Unicode code point (and nothing else).
 
         Mapping:
         - Joy: U+1F604
@@ -138,12 +140,26 @@ class MemoryManager:
 
         return response.choices[0].message.content
 
-    async def retrieve_from_memories(self, query: str):
-        """Request the RAG service to retrieve the closest memories"""
-        uri = f"{RAG_SERVICE_URL}/retrieve_closest_memories"
-        session = await self.get_aiohttp_session()
-        async with session.post(uri, json={"query": query}) as response:
-            return await response.json()
+    async def summarize_conversation(self, conversation: str, mood: Mood) -> str:
+        """Summarize the conversation"""
+        system_prompt = f"""
+        Summarize the following conversation between the user and the assistant. 
+        Bear in mind, this converation is for the user! Keep it clear, do not be too verbose.
+        """
+
+        user_prompt = f"""
+        CONVERSATION:
+        {conversation}
+        """
+        response = await self.client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+
+        return response.choices[0].message.content
 
     async def query_all_user_memories(self, user_id: int, query: str) -> str:
         """Query all memories of a user and run a query against them using ChatGPT"""

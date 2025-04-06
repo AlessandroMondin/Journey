@@ -1,4 +1,5 @@
 import logging
+import json
 
 from fastapi import (
     FastAPI,
@@ -12,10 +13,6 @@ from fastapi import (
     Response,
 )
 from typing import Dict
-import hmac
-import hashlib
-import time
-import json
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
@@ -46,6 +43,7 @@ from service.elevenlabs_api import (
     create_elevenlabs_voice,
     load_memory_into_agent,
     load_tools_into_agent,
+    parse_conversation,
 )
 from pydantic import BaseModel
 from config import DEFAULT_MEMORY, elevenlabs_webhook_config
@@ -79,7 +77,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for testing
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
@@ -453,6 +451,7 @@ async def elevenlabs_webhook(
 
     # Get the raw request body
     request_body = await request.body()
+    request_body = json.loads(request_body)
 
     # Development mode - skip validation
     if (
@@ -460,24 +459,19 @@ async def elevenlabs_webhook(
         or elevenlabs_webhook_config["webhook_secret"] == "testing"
     ):
         memory_manager = MemoryManager(db)
-        elevenlabs_id = request.get("agent_id")
+        elevenlabs_id = request_body["data"]["agent_id"]
         db_agent = crud.get_agent_by_elevenlabs_agent_id(db, elevenlabs_id)
         if not db_agent:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Agent not found",
             )
-        text = request.get("text")
-        if not elevenlabs_id or not text:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Missing required fields",
-            )
+        conversation = parse_conversation(request_body["data"]["transcript"])
         await memory_manager.update_memory(
             agent_id=db_agent.agent_id,
             user_id=db_agent.user_id,
             memory=db_agent.memory,
-            last_conversation=text,
+            last_conversation=conversation,
         )
 
         return Response(

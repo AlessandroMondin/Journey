@@ -1,11 +1,72 @@
-import requests
+from service.elevenlabs_api import parse_conversation
 
-response = requests.post(
-    "http://localhost:8000/memory/get",
-    json={
-        "agent_id": "n3vBbsK8TE8VqZqn17Gb",
-        "text": "What happened important in my life lately?",
+conv = [
+    {
+        "role": "user",
+        "message": "Hello there! Hello!",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 2,
+        "conversation_turn_metrics": None,
+        "rag_retrieval_info": None,
     },
-)
+    {
+        "role": "agent",
+        "message": "...",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 12,
+        "conversation_turn_metrics": {...},
+        "rag_retrieval_info": None,
+    },
+    {
+        "role": "user",
+        "message": "Hello",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 2,
+        "conversation_turn_metrics": None,
+        "rag_retrieval_info": None,
+    },
+    {
+        "role": "agent",
+        "message": "...",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 15,
+        "conversation_turn_metrics": None,
+        "rag_retrieval_info": None,
+    },
+    {
+        "role": "user",
+        "message": "Hello Hello What are you doing?",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 2,
+        "conversation_turn_metrics": None,
+        "rag_retrieval_info": None,
+    },
+    {
+        "role": "agent",
+        "message": "Hello!...",
+        "tool_calls": [...],
+        "tool_results": [...],
+        "feedback": None,
+        "llm_override": None,
+        "time_in_call_secs": 18,
+        "conversation_turn_metrics": {...},
+        "rag_retrieval_info": None,
+    },
+]
 
-print(response.json())
+print(parse_conversation(conv))

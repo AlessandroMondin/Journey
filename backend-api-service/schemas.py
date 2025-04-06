@@ -106,7 +106,7 @@ class MemoryResponse(BaseModel):
 class DailyMemoryItem(BaseModel):
     day_timestamp: str
     memory_text: str
-    mood: Mood
+    mood: Mood | str
 
     class Config:
         orm_mode = True

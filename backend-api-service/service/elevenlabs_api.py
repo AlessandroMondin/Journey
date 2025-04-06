@@ -3,6 +3,7 @@ import logging
 import sys
 import os
 from typing import Optional, TypedDict
+from pydantic import BaseModel
 
 # Add the parent directory to Python path to find the config module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -225,3 +226,18 @@ def load_tools_into_agent(agent_id: str):
 
     # Parse and return the response
     return response.json()
+
+
+class ConversationTurn(TypedDict):
+    role: str
+    message: str
+
+
+def parse_conversation(conversation: list[ConversationTurn]) -> str:
+    """
+    Parse a conversation string into a list of messages
+    """
+    parsed_conversation = ""
+    for turn in conversation:
+        parsed_conversation += f"{turn['role']}: {turn['message']}\n"
+    return parsed_conversation

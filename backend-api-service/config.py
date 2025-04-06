@@ -21,7 +21,7 @@ ELEVENLABS_WEBHOOK_SECRET = os.getenv("ELEVENLABS_WEBHOOK_SECRET")
 
 elevenlabs_webhook_config = {
     "webhook_secret": ELEVENLABS_WEBHOOK_SECRET,
-    "dev_mode": os.getenv("ENV") == "testing",
+    "dev_mode": "testing",
     "port": API_SERVICE_PORT,
 }
 if not ELEVENLABS_WEBHOOK_SECRET:
