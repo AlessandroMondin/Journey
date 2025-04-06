@@ -1,180 +1,39 @@
-# ElevenLabs RAG API
+# Journey: A Digital Thought Companion
 
-A FastAPI-based API for handling conversations with ElevenLabs agents and RAG processing.
+Journey is a Digital AI Diary that help people to keep track of how they feel and how their thoughts are influence by the external world. Journey
+besides interactive (you will speak with your diary), also comes with an integrated calendar where users can track past conversations and also understand with the blink of an eye they feel.
 
-## Features
+## About Journey
 
-- User authentication (register, login)
-- Agent management (create, list, get)
-- Real-time conversation via WebSocket
-- RAG processing
+In order to run it you need to perform quite some steps:
 
-## Setup
+1. Installation Backend
 
-1. Install dependencies:
+Install the packages in the `backend-api-service` directory:
 
-```bash
-pip install -r requirements.txt
-```
+- cd backend-api-service
+- python3.11 -m venv .vevn
+- source .venv/bin/activate
+- pip install -r requirements.txt
 
-2. Run the application:
+Create an .env file (inside `backend-api-service`) and add
 
-```bash
-uvicorn app.main:app --reload
-```
+1. An **ELEVENLABS_API_KEY**
+2. an **OPENAI_API_KEY**
 
-## Google OAuth Setup
+Then, from the same wdir run "python run.py"
 
-To enable Google login functionality, follow these steps:
+2. Installation Frontend
 
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Navigate to "APIs & Services" > "Credentials"
-4. Click "Create Credentials" and select "OAuth client ID"
-5. Set the application type to "Web application"
-6. Add your application's domain to the "Authorized JavaScript origins" (e.g., http://localhost:3000 for development)
-7. Add your redirect URI to the "Authorized redirect URIs" (e.g., http://localhost:3000 for development)
-8. Click "Create" and note your Client ID
-9. Create a `.env.local` file in the root of your project and add:
-   ```
-   REACT_APP_GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
-   ```
-10. Replace `YOUR_GOOGLE_CLIENT_ID` with the Client ID you obtained from Google Cloud Console
+- npm i
 
-## Backend CORS Configuration
+To run it, you need to (should be improved):
 
-To allow your frontend to communicate with your backend, you need to configure CORS on your backend server. Here's how to do it for different frameworks:
+1. `cd backend-api-service && python run.py
 
-### For FastAPI (Python)
+2. copy the ngrok host name in the logs, and run inside the frontend directory `REACT_APP_API_BASE_URL=that_ngrok_host npm start`
 
-```python
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+3) Finally go to elevenlabs UI >> Conversation AI >> Conversational AI Settings >> Post-Call Webhook >> create a webhook with a random name and
+   the following URL: that_ngrok_host/webhook/elevenlabs
 
-app = FastAPI()
-
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
-
-### For Express (Node.js)
-
-```javascript
-const express = require("express");
-const cors = require("cors");
-const app = express();
-
-// Configure CORS
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Frontend URL
-    credentials: true,
-  })
-);
-```
-
-Make sure to install the necessary packages:
-
-- For Node.js: `npm install cors`
-- For Python: FastAPI includes CORS middleware
-
-## API Endpoints
-
-### Authentication
-
-#### Register a new user
-
-```
-POST /auth/register
-```
-
-Request body:
-
-```json
-{
-  "username": "your_username",
-  "password": "your_password",
-  "name": "Your Name",
-  "email": "your.email@example.com"
-}
-```
-
-#### Login and get access token
-
-```
-POST /auth/token
-```
-
-Form data:
-
-- `username`: Your username
-- `password`: Your password
-
-### Agent Management
-
-#### Create a new agent
-
-```
-POST /agents
-```
-
-Request body:
-
-```json
-{
-  "name": "Agent Name",
-  "description": "Agent Description"
-}
-```
-
-Headers:
-
-- `Authorization`: Bearer {your_access_token}
-
-#### List all agents
-
-```
-GET /agents
-```
-
-Headers:
-
-- `Authorization`: Bearer {your_access_token}
-
-#### Get agent details
-
-```
-GET /agents/{agent_id}
-```
-
-Headers:
-
-- `Authorization`: Bearer {your_access_token}
-
-### WebSocket Conversation
-
-Connect to:
-
-```
-WebSocket /ws/conversation/{agent_id}
-```
-
-Message format:
-
-```json
-{
-  "api_key": "Your ElevenLabs API key",
-  "messages": [{ "role": "user", "content": "Your message" }]
-}
-```
-
-## API Documentation
-
-- Swagger UI: `/docs`
-- ReDoc: `/redoc`
+4) Go to http://localhost:3000/ and start using the app
