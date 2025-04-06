@@ -375,9 +375,10 @@ const Calendar = () => {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
         },
-        credentials: 'include',
+        // credentials: 'include',
         mode: 'cors'
       });
 

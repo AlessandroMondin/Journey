@@ -14,7 +14,7 @@ export const registerUser = async (userData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
       body: JSON.stringify({
         username: userData.email, // Use email as username
@@ -65,7 +65,7 @@ export const googleRegister = async (userData) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
       body: JSON.stringify({
         username: email,
@@ -122,7 +122,7 @@ export const googleLogin = async (userData) => {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
       body: formData,
     });
@@ -172,7 +172,7 @@ export const getToken = async (userData) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
       body: formData,
     });
@@ -212,7 +212,7 @@ export const getAgentSignedUrl = async (token) => {
         'Authorization': `Bearer ${token.access_token}`,
         'Accept': 'application/json',
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
     });
 
@@ -255,7 +255,7 @@ export const setAgentVoice = async (token, audioBlob) => {
       headers: {
         'Authorization': `Bearer ${token.access_token}`,
       },
-      credentials: 'include',
+    //   credentials: 'include',
       mode: 'cors',
       body: formData,
     });
