@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
               try {
                 const response = await getAgentSignedUrl(parsedToken);
                 setSignedUrl(response.signed_url);
-                
+
                 // Set hasVoiceSet to true to bypass the SetVoice component
                 setHasVoiceSet(true);
               } catch (error) {
@@ -108,11 +108,22 @@ export const AuthProvider = ({ children }) => {
 
         // Always set hasVoiceSet to true to bypass the SetVoice component
         setHasVoiceSet(true);
-        
+
         // Get the signed URL for the new user
         try {
           const response = await getAgentSignedUrl(userData.token || userData);
           setSignedUrl(response.signed_url);
+          
+          // Update token with the agent_id if it exists in the response
+          if (userData.agent_id) {
+            const updatedToken = { 
+              ...(userData.token || userData), 
+              agent_id: userData.agent_id 
+            };
+            setBackendToken(updatedToken);
+            localStorage.setItem('backendToken', JSON.stringify(updatedToken));
+            console.log('Agent ID saved from registration:', userData.agent_id);
+          }
         } catch (error) {
           console.error('Error getting agent signed URL for new user:', error);
         }
@@ -157,9 +168,17 @@ export const AuthProvider = ({ children }) => {
         // Login with Google
         const tokenData = await googleLogin(decodedToken);
 
+        // Ensure agent_id is preserved in the stored token
+        let tokenToStore = tokenData;
+        if (tokenData.agent_id) {
+          console.log('Agent ID received from login:', tokenData.agent_id);
+        } else {
+          console.warn('No agent_id received in login response');
+        }
+
         // Save backend token
-        setBackendToken(tokenData);
-        localStorage.setItem('backendToken', JSON.stringify(tokenData));
+        setBackendToken(tokenToStore);
+        localStorage.setItem('backendToken', JSON.stringify(tokenToStore));
         setIsAuthenticated(true);
         setAuthError(null);
 
@@ -206,16 +225,16 @@ export const AuthProvider = ({ children }) => {
         const updatedToken = { ...backendToken, has_voice_set: true };
         setBackendToken(updatedToken);
         localStorage.setItem('backendToken', JSON.stringify(updatedToken));
-        
+
         // Fetch the signed URL after setting the voice
         try {
           const signedUrlResponse = await getAgentSignedUrl(backendToken);
           setSignedUrl(signedUrlResponse.signed_url);
-          
+
           // Update token with signed URL
-          const tokenWithSignedUrl = { 
-            ...updatedToken, 
-            signed_url: signedUrlResponse.signed_url 
+          const tokenWithSignedUrl = {
+            ...updatedToken,
+            signed_url: signedUrlResponse.signed_url
           };
           setBackendToken(tokenWithSignedUrl);
           localStorage.setItem('backendToken', JSON.stringify(tokenWithSignedUrl));

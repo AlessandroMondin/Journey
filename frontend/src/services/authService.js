@@ -209,6 +209,7 @@ export const getAgentSignedUrl = async (token) => {
     const response = await fetch(config.AGENT_ENDPOINTS.SIGNED_URL, {
       method: 'GET',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Authorization': `Bearer ${token.access_token}`,
         'Accept': 'application/json',
       },

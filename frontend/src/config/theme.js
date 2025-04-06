@@ -46,4 +46,4 @@ const theme = {
   SHADOWS,
 };
 
-export default theme; 
+export default theme;

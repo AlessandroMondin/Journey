@@ -40,7 +40,7 @@ const WhiteBall = styled.div`
   color: rgba(0, 0, 0, 0.6);
   font-weight: 500;
   font-size: 16px;
-  
+
   @keyframes pulse {
     0% {
       transform: scale(1);
@@ -49,7 +49,7 @@ const WhiteBall = styled.div`
       transform: scale(1.15);
     }
   }
-  
+
   &:hover {
     transform: ${props => props.$isActive ? 'none' : 'scale(1.05)'};
   }
@@ -147,10 +147,10 @@ const ErrorMessage = styled.div`
 const TalkButton = () => {
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // Get user data and token from auth context
   const { user, backendToken, signedUrl, logout } = useAuth();
-  
+
   // Use the ElevenLabs React SDK hook with improved error handling
   const conversation = useConversation({
     onConnect: () => {
@@ -178,23 +178,23 @@ const TalkButton = () => {
     try {
       // Extract agent_id from URL query parameters
       const urlObj = new URL(url);
-      
+
       // Check if it's in the query parameters
       const queryAgentId = urlObj.searchParams.get('agent_id');
       if (queryAgentId) {
         return queryAgentId;
       }
-      
+
       // Check if it's in the URL path
       // Example: "wss://api.elevenlabs.io/v1/convai/conversation/agent_123abc"
       const pathParts = urlObj.pathname.split('/');
       const lastPathPart = pathParts[pathParts.length - 1];
-      
+
       // If the last part looks like an agent ID (not a generic endpoint)
       if (lastPathPart && !lastPathPart.includes('.') && !['conversation', 'convai', 'v1'].includes(lastPathPart)) {
         return lastPathPart;
       }
-      
+
       console.warn('Could not find agent ID in URL:', url);
       return null;
     } catch (error) {
@@ -207,57 +207,57 @@ const TalkButton = () => {
   const handleClick = async () => {
     // Clear any previous errors
     setError(null);
-    
+
     if (!isActive) {
       try {
-        console.log('Auth context data:', { 
+        console.log('Auth context data:', {
           hasUser: !!user,
           hasBackendToken: !!backendToken,
           hasSignedUrl: !!signedUrl,
           backendTokenFields: backendToken ? Object.keys(backendToken) : []
         });
-        
+
         // Request microphone permission if not already granted
         await navigator.mediaDevices.getUserMedia({ audio: true });
-        
+
         // Get the agent ID from backendToken or signedUrl
         let agentId = null;
-        
+
         // First try to get it from backendToken
         if (backendToken && backendToken.elevenlabs_agent_id) {
           agentId = backendToken.elevenlabs_agent_id;
           console.log('Using agent ID from backendToken:', agentId);
-        } 
+        }
         // Then try to extract it from signedUrl
         else if (signedUrl) {
           agentId = extractAgentIdFromUrl(signedUrl);
           console.log('Extracted agent ID from signedUrl:', agentId);
         }
-        
+
         // Check if agent ID is available - throw error if not
         if (!agentId) {
           console.error('Agent ID not available');
           console.log('backendToken:', backendToken);
           console.log('signedUrl:', signedUrl);
-          
+
           // Provide a clear error message about the missing voice setup
           const errorMessage = 'No agent ID found. This is likely because the voice setup step was skipped. Please set up your voice profile or contact support.';
           setError(errorMessage);
           throw new Error(errorMessage);
         }
-        
+
         console.log('Starting conversation with agent ID:', agentId);
-        
+
         // Start the conversation session with the extracted agent ID
         const conversationId = await conversation.startSession({
           agentId: agentId,
         });
-        
+
         console.log('Conversation started with ID:', conversationId);
         setIsActive(true);
       } catch (error) {
         console.error('Error starting conversation:', error);
-        
+
         // More detailed error logging
         if (error instanceof CloseEvent) {
           console.log('WebSocket close event details:', {
@@ -266,10 +266,10 @@ const TalkButton = () => {
             wasClean: error.wasClean
           });
         }
-        
+
         // Show more specific error message to the user
         let errorMessage = 'Failed to start conversation.';
-        
+
         if (error instanceof DOMException && error.name === 'NotAllowedError') {
           errorMessage = 'Microphone access was denied. Please allow microphone access to use this feature.';
         } else if (error instanceof CloseEvent) {
@@ -278,12 +278,12 @@ const TalkButton = () => {
           // Use the error message we created above
           errorMessage = error.message;
         }
-        
+
         // Set the error state to display to the user
         if (!error.message || !error.message.includes('agent ID')) {
           setError(errorMessage);
         }
-        
+
         setIsActive(false);
       }
     } else {
@@ -312,8 +312,8 @@ const TalkButton = () => {
         {isActive
           ? isSpeaking
             ? ''
-            : status === 'connected' 
-              ? '' 
+            : status === 'connected'
+              ? ''
               : 'Connecting...'
           : ''}
       </StatusText>

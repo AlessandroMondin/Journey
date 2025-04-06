@@ -335,7 +335,7 @@ const SetVoice = () => {
 
       {displayStatus && <StatusMessage>{displayStatus}</StatusMessage>}
       {displayError && <StatusMessage $isError>{displayError}</StatusMessage>}
-      
+
       {hasVoiceSet && signedUrl && (
         <ConnectionStatus>
           Connection with AI agent established.
