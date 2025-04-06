@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Embedder Service - Vector embedding and search service
+  embedder_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=embedder
+    ports:
+      - "8001:8001"
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - REDIS_HOST=redis
+      - SERVICE_API_KEY=${SERVICE_API_KEY:-internal-service-api-key}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    volumes:
+      - .:/app
+      - embedder_cache:/root/.cache
+    depends_on:
+      - qdrant
+    networks:
+      - rag_network
+    restart: unless-stopped
+    command: python -m embedder_service.run
+
+  # Qdrant Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - rag_network
+    restart: unless-stopped
+
+networks:
+  rag_network:
+    driver: bridge
+
+volumes:
+  qdrant_data:
+    driver: local
+  embedder_cache:
+    driver: local

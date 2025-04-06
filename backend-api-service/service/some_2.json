@@ -1,0 +1,52 @@
+{
+    "name": "Agent uk6PZ",
+    "conversation_config": {
+      "agent": {
+          "tools": [
+            {
+              "id": "0PGW2Fu3ZvyKasp5UT0l",
+              "type": "webhook",
+              "name": "some_other_tool_2_2",
+              "description": "some other tool",
+              "dynamic_variables": {
+                "dynamic_variable_placeholders": {}
+              },
+              "api_schema": {
+                "url": "https://some_other_tool_eheh_23:8000",
+                "method": "POST",
+                "request_body_schema": {
+                  "type": "object",
+                  "description": "The and",
+                  "properties": {
+                    "the": {
+                      "type": "string",
+                      "description": "and",
+                      "dynamic_variable": "",
+                      "constant_value": ""
+                    }
+                  },
+                  "required": [
+                    "the"
+                  ]
+                },
+                "request_headers": {}
+              }
+            },
+            {
+              "id": "nseoH9uTTnrmvq9PPiVF",
+              "type": "webhook",
+              "name": "some_tool",
+              "description": "this tool doees",
+              "dynamic_variables": {
+                "dynamic_variable_placeholders": {}
+              },
+              "api_schema": {
+                "url": "https://someurl:8000",
+                "method": "GET",
+                "request_headers": {}
+              }
+            }
+          ]
+        }
+      }
+  }

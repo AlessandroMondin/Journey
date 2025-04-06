@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    volumes:
+      - ./:/app
+      - sqlite_data:/var/lib/sqlite
+    environment:
+      - DATABASE_URL=sqlite:///var/lib/sqlite/elevenlabs_rag.db
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  sqlite_data:

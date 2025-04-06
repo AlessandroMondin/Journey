@@ -1,0 +1,15 @@
+**/.DS_Store
+**/.idea
+**/.vscode
+**/.vscode/**
+**/.vscode/**/**
+**/.vscode/**/**/**
+**/.venv
+.env
+.env.local
+**/.env
+node_modules
+**/__pycache__/**
+app/__pycache__
+data/
+scripts/
