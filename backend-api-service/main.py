@@ -161,7 +161,7 @@ async def register_user(
 
     # Extract the agent ID from the response
     elevenlabs_agent_id = elevenlabs_response.get("agent_id")
-    load_tools_into_agent(elevenlabs_agent_id)
+    # load_tools_into_agent(elevenlabs_agent_id)
     signed_url = get_signed_url(elevenlabs_agent_id)
 
     crud.create_agent(
@@ -362,28 +362,7 @@ async def update_memory(
     request: dict,
     db: Session = Depends(get_db),
 ):
-    memory_manager = MemoryManager(db)
-    elevenlabs_id = request.get("agent_id")
-    db_agent = crud.get_agent_by_elevenlabs_agent_id(db, elevenlabs_id)
-    if not db_agent:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Agent not found",
-        )
-    text = request.get("text")
-    if not elevenlabs_id or not text:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing required fields",
-        )
-    await memory_manager.update_memory(
-        agent_id=db_agent.agent_id,
-        user_id=db_agent.user_id,
-        memory=db_agent.memory,
-        last_conversation=text,
-    )
-
-    return Response(status_code=status.HTTP_200_OK)
+    pass
 
 
 # AGENT TOOL
@@ -472,6 +451,7 @@ async def elevenlabs_webhook(
             user_id=db_agent.user_id,
             memory=db_agent.memory,
             last_conversation=conversation,
+            elevenlabs_id=elevenlabs_id,
         )
 
         return Response(

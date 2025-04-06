@@ -6,6 +6,7 @@ from . import crud
 from . import models
 from datetime import datetime, timedelta
 from enum import StrEnum
+from service.elevenlabs_api import load_memory_into_agent
 
 
 class Mood(StrEnum):
@@ -33,7 +34,12 @@ class MemoryManager:
             self.session = None
 
     async def update_memory(
-        self, agent_id: str, user_id: str, memory: str, last_conversation: str
+        self,
+        agent_id: str,
+        user_id: str,
+        memory: str,
+        last_conversation: str,
+        elevenlabs_id: str = None,
     ):
         # Create a prompt that instructs the model to update the memory based
         # on the new conversation
@@ -47,6 +53,8 @@ class MemoryManager:
         crud.update_user_memory_by_agent_id(self.db, agent_id, updated_memory)
 
         crud.add_new_user_memory(self.db, user_id, agent_id, text=summary, mood=mood)
+
+        load_memory_into_agent(elevenlabs_id, updated_memory)
 
         return updated_memory
 
