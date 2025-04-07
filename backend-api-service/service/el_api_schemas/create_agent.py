@@ -1,5 +1,5 @@
 from config import (
-    DEFAULT_MEMORY,
+    DEFAULT_MEMORY_PROMPT,
     API_SERVICE_URL,
     END_CALL_TOOL_PROMPT,
     RETRIEVE_MEMORY_TOOL_PROMPT,
@@ -80,7 +80,7 @@ create_agent_payload = {
         "agent": {
             "prompt": {
                 "model": "gpt-4o-mini",
-                "prompt": DEFAULT_MEMORY,
+                "prompt": DEFAULT_MEMORY_PROMPT,
             },
             "dynamic_variables": {
                 "agent_id": "str",
@@ -142,72 +142,72 @@ PATCH_AGENT_PAYLOAD = {
                     "max_vector_distance": 0.6,
                 },
                 "tools": [
-                    {
-                        "type": "webhook",
-                        "name": "RETRIEVE_MEMORY_TOOL",
-                        "description": 'Use this tool to retrieve information from the user\'s memory. Use it as much as possible.\nEvery time the user says something, or ask you something that is not present in your knowledge base,\nuse this tool to retrieve information from the user\'s memory. If the retrieved information add value to\nthe conversation, use it to answer the user\'s question.\nThe request body must be a JSON object with the following fields:\n- agent_id: The ID of the agent, whose value is stored in the dynamic variable `agent_id`\n- text: The text to search the memory for.\ni.e:\n{\n    "agent_id": "{{agent_id}}",\n    "text": "{{text}}"\n}',
-                        "dynamic_variables": {"dynamic_variable_placeholders": {}},
-                        "api_schema": {
-                            "url": f"{API_SERVICE_URL}/memory/get",
-                            "method": "POST",
-                            "request_body_schema": {
-                                "type": "object",
-                                "description": "Use this tool to retrieve information from the user's memory. Use it as much as possible.\nEvery time the user says something, or ask you something that is not present in your knowledge base,\nuse this tool to retrieve information from the user's memory. If the retrieved information add value to\nthe conversation, use it to answer the user's question.\n",
-                                "properties": {
-                                    "agent_id": {
-                                        "type": "string",
-                                        "description": "he ID of the agent, whose value is stored in the dynamic variable `agent_id`",
-                                        "dynamic_variable": "",
-                                        "constant_value": "",
-                                    },
-                                    "text": {
-                                        "type": "string",
-                                        "description": "The text to search the memory for",
-                                        "dynamic_variable": "",
-                                        "constant_value": "",
-                                    },
-                                },
-                                "required": ["agent_id", "text"],
-                            },
-                            "request_headers": {},
-                        },
-                    },
-                    {
-                        "type": "webhook",
-                        "name": "END_CALL",
-                        "description": 'At the end of the call, sends a summary of the conversation to the following endpoint.\nThe request body must be a JSON object with the following fields:\n- agent_id: The ID of the agent, whose value is stored in the dynamic variable `agent_id`\n- memory_id: The ID of the memory, whose value is stored in the dynamic variable `memory_id`\n- text: The summary of the conversation, must be as detailed as possible. \ni.e:\n{\n    "agent_id": "{{agent_id}}",\n    "memory_id": "{{memory_id}}",\n    "text": "{{text}}"\n}',
-                        "dynamic_variables": {"dynamic_variable_placeholders": {}},
-                        "api_schema": {
-                            "url": f"{API_SERVICE_URL}/memory/update",
-                            "method": "POST",
-                            "request_body_schema": {
-                                "type": "object",
-                                "description": "At the end of the conversation, sends a summary of the conversation AS DETAILED AS POSSIBLE",
-                                "properties": {
-                                    "agent_id": {
-                                        "type": "string",
-                                        "description": "The ID of the agent, whose value is stored in the dynamic variable `agent_id`",
-                                        "dynamic_variable": "",
-                                        "constant_value": "",
-                                    },
-                                    "memory_id": {
-                                        "type": "string",
-                                        "description": "The ID of the memory, whose value is stored in the dynamic variable `memory_id`",
-                                        "dynamic_variable": "",
-                                        "constant_value": "",
-                                    },
-                                    "text": {
-                                        "type": "string",
-                                        "description": "The summary of the conversation, must be as detailed as possible.",
-                                        "dynamic_variable": "",
-                                        "constant_value": "",
-                                    },
-                                },
-                                "required": ["agent_id", "memory_id", "text"],
-                            },
-                            "request_headers": {},
-                        },
-                    },
+                    # {
+                    #     "type": "webhook",
+                    #     "name": "RETRIEVE_MEMORY_TOOL",
+                    #     "description": 'Use this tool to retrieve information from the user\'s memory. Use it as much as possible.\nEvery time the user says something, or ask you something that is not present in your knowledge base,\nuse this tool to retrieve information from the user\'s memory. If the retrieved information add value to\nthe conversation, use it to answer the user\'s question.\nThe request body must be a JSON object with the following fields:\n- agent_id: The ID of the agent, whose value is stored in the dynamic variable `agent_id`\n- text: The text to search the memory for.\ni.e:\n{\n    "agent_id": "{{agent_id}}",\n    "text": "{{text}}"\n}',
+                    #     "dynamic_variables": {"dynamic_variable_placeholders": {}},
+                    #     "api_schema": {
+                    #         "url": f"{API_SERVICE_URL}/memory/get",
+                    #         "method": "POST",
+                    #         "request_body_schema": {
+                    #             "type": "object",
+                    #             "description": "Use this tool to retrieve information from the user's memory. Use it as much as possible.\nEvery time the user says something, or ask you something that is not present in your knowledge base,\nuse this tool to retrieve information from the user's memory. If the retrieved information add value to\nthe conversation, use it to answer the user's question.\n",
+                    #             "properties": {
+                    #                 "agent_id": {
+                    #                     "type": "string",
+                    #                     "description": "he ID of the agent, whose value is stored in the dynamic variable `agent_id`",
+                    #                     "dynamic_variable": "",
+                    #                     "constant_value": "",
+                    #                 },
+                    #                 "text": {
+                    #                     "type": "string",
+                    #                     "description": "The text to search the memory for",
+                    #                     "dynamic_variable": "",
+                    #                     "constant_value": "",
+                    #                 },
+                    #             },
+                    #             "required": ["agent_id", "text"],
+                    #         },
+                    #         "request_headers": {},
+                    #     },
+                    # },
+                    # {
+                    #     "type": "webhook",
+                    #     "name": "END_CALL",
+                    #     "description": 'At the end of the call, sends a summary of the conversation to the following endpoint.\nThe request body must be a JSON object with the following fields:\n- agent_id: The ID of the agent, whose value is stored in the dynamic variable `agent_id`\n- memory_id: The ID of the memory, whose value is stored in the dynamic variable `memory_id`\n- text: The summary of the conversation, must be as detailed as possible. \ni.e:\n{\n    "agent_id": "{{agent_id}}",\n    "memory_id": "{{memory_id}}",\n    "text": "{{text}}"\n}',
+                    #     "dynamic_variables": {"dynamic_variable_placeholders": {}},
+                    #     "api_schema": {
+                    #         "url": f"{API_SERVICE_URL}/memory/update",
+                    #         "method": "POST",
+                    #         "request_body_schema": {
+                    #             "type": "object",
+                    #             "description": "At the end of the conversation, sends a summary of the conversation AS DETAILED AS POSSIBLE",
+                    #             "properties": {
+                    #                 "agent_id": {
+                    #                     "type": "string",
+                    #                     "description": "The ID of the agent, whose value is stored in the dynamic variable `agent_id`",
+                    #                     "dynamic_variable": "",
+                    #                     "constant_value": "",
+                    #                 },
+                    #                 "memory_id": {
+                    #                     "type": "string",
+                    #                     "description": "The ID of the memory, whose value is stored in the dynamic variable `memory_id`",
+                    #                     "dynamic_variable": "",
+                    #                     "constant_value": "",
+                    #                 },
+                    #                 "text": {
+                    #                     "type": "string",
+                    #                     "description": "The summary of the conversation, must be as detailed as possible.",
+                    #                     "dynamic_variable": "",
+                    #                     "constant_value": "",
+                    #                 },
+                    #             },
+                    #             "required": ["agent_id", "memory_id", "text"],
+                    #         },
+                    #         "request_headers": {},
+                    #     },
+                    # },
                 ],
             },
         },

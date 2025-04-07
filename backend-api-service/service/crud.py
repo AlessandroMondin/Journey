@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 import uuid
 from . import models
 from typing import Optional, List
-from config import DEFAULT_MEMORY
+from config import DEFAULT_MEMORY_PROMPT
 
 
 def create_auth(db: Session, username: str, hashed_password: str) -> models.Auth:
@@ -166,7 +166,10 @@ def create_default_memory(
     """Create a new memory entry for a user and optionally an agent"""
     memory_id = f"memory_{uuid.uuid4()}"
     db_memory = models.Memory(
-        memory_id=memory_id, user_id=user_id, agent_id=agent_id, text=DEFAULT_MEMORY
+        memory_id=memory_id,
+        user_id=user_id,
+        agent_id=agent_id,
+        text=DEFAULT_MEMORY_PROMPT,
     )
     db.add(db_memory)
     db.flush()  # Flush to get the ID without committing

@@ -46,7 +46,7 @@ from service.elevenlabs_api import (
     parse_conversation,
 )
 from pydantic import BaseModel
-from config import DEFAULT_MEMORY, elevenlabs_webhook_config
+from config import DEFAULT_MEMORY_PROMPT, elevenlabs_webhook_config
 
 # Initialize database on startup
 init_database()
@@ -170,7 +170,7 @@ async def register_user(
         agent_name,
         agent_description,
         elevenlabs_agent_id,
-        memory=DEFAULT_MEMORY,
+        memory=DEFAULT_MEMORY_PROMPT,
     )
 
     # Return the response with user_id and signed_url (which may be None)

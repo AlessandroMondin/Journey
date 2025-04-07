@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 # Add the parent directory to Python path to find the config module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import ELEVENLABS_API_KEY
+from config import ELEVENLABS_API_KEY, SYSTEM_PROMPT
 from service.el_api_schemas.create_agent import (
     create_agent_payload,
     load_memory_payload,
@@ -192,13 +192,15 @@ def load_memory_into_agent(agent_id: str, memory: str):
     """
     url = f"{ELEVENLABS_API_BASE_URL}/v1/convai/agents/{agent_id}"
 
+    INSTRUCT = SYSTEM_PROMPT + "/n" + memory
+
     # Set up headers with API key
     headers = {
         "Accept": "application/json",
         "xi-api-key": ELEVENLABS_API_KEY,
     }
 
-    PATCH_AGENT_PAYLOAD["conversation_config"]["agent"]["prompt"]["prompt"] = memory
+    PATCH_AGENT_PAYLOAD["conversation_config"]["agent"]["prompt"]["prompt"] = INSTRUCT
 
     # Make the API request
     response = requests.patch(url, headers=headers, json=PATCH_AGENT_PAYLOAD)

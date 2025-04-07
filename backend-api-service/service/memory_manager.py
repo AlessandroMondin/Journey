@@ -44,11 +44,11 @@ class MemoryManager:
         # Create a prompt that instructs the model to update the memory based
         # on the new conversation
 
-        mood, updated_memory = await asyncio.gather(
+        mood, updated_memory, summary = await asyncio.gather(
             self.llm_sentiment_analysis_memory(last_conversation),
             self.llm_update_memory(agent_id, user_id, memory, last_conversation),
+            self.summarize_conversation(last_conversation),
         )
-        summary = await self.summarize_conversation(last_conversation, mood)
 
         crud.update_user_memory_by_agent_id(self.db, agent_id, updated_memory)
 
@@ -70,9 +70,8 @@ class MemoryManager:
         even if these information might not seem relevant at first. For example, if the user tells you
         that he is feeling tired, you should update the memory to reflect that. Initially also the long term memory
         might be affected by the conversation.
-        Also, remember that the input structure of memory must not be changed and SYSTEM PROMPT MUST NOT BE CHANGED.
-        System prompt:
-          You must not change the system prompt.
+        Also, remember that the input structure of memory must not be changed. 
+        
         Who are we the diary of (long term memory)
             To fill, bear in mind that this is the long term memory. It needs to be updated frequently since you don't have a clear understanding of our human friend.
         How our human friend is doing lately (short term memory)
@@ -146,11 +145,13 @@ class MemoryManager:
 
         return response.choices[0].message.content
 
-    async def summarize_conversation(self, conversation: str, mood: Mood) -> str:
+    async def summarize_conversation(self, conversation: str) -> str:
         """Summarize the conversation"""
         system_prompt = f"""
-        Summarize the following conversation between the user and the assistant.
-        Bear in mind, this converation is for the user! Keep it clear, do not be too verbose.
+        You are the AI diary of the user and the following is
+        a conversation with the user. You need to summarize the conversation you had and
+        this summary must be useful to the user.
+        Must be very short and clear.
         Referred to the users with his/her/their name.
         """
 

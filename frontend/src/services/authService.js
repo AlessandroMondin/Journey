@@ -12,6 +12,7 @@ export const registerUser = async (userData) => {
     const response = await fetch(config.AUTH_ENDPOINTS.REGISTER, {
       method: 'POST',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
       },
     //   credentials: 'include',
@@ -62,6 +63,7 @@ export const googleRegister = async (userData) => {
     const response = await fetch(config.AUTH_ENDPOINTS.REGISTER, {
       method: 'POST',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
@@ -94,7 +96,16 @@ export const googleRegister = async (userData) => {
       throw new Error(`Error registering with Google: ${errorDetail}`);
     }
 
-    return await response.json();
+    const responseData = await response.json();
+    
+    // Log if agent_id is present in the response
+    if (responseData.agent_id) {
+      console.log('Received agent_id in registration response:', responseData.agent_id);
+    } else {
+      console.warn('No agent_id received in registration response');
+    }
+    
+    return responseData;
   } catch (error) {
     console.error('Error registering with Google:', error);
     throw error;
@@ -119,6 +130,7 @@ export const googleLogin = async (userData) => {
     const response = await fetch(config.AUTH_ENDPOINTS.TOKEN, {
       method: 'POST',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
       },
@@ -170,6 +182,7 @@ export const getToken = async (userData) => {
     const response = await fetch(config.AUTH_ENDPOINTS.TOKEN, {
       method: 'POST',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     //   credentials: 'include',
@@ -254,6 +267,7 @@ export const setAgentVoice = async (token, audioBlob) => {
     const response = await fetch(config.AGENT_ENDPOINTS.VOICE, {
       method: 'PATCH',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Authorization': `Bearer ${token.access_token}`,
       },
     //   credentials: 'include',
